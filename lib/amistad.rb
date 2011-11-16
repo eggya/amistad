@@ -1,3 +1,5 @@
+$default = YAML::load( File.open( "config/amistad.yml" ) )
+
 if defined?(ActiveRecord)
   require 'amistad/active_record/friend_model'
   require 'amistad/active_record/friendship_model'

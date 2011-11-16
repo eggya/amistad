@@ -5,12 +5,12 @@ module Amistad
         receiver.class_exec do
           include InstanceMethods
 
-          belongs_to :user
-          belongs_to :friend, :class_name => "User", :foreign_key => "friend_id"
-          belongs_to :blocker, :class_name => "User", :foreign_key => "blocker_id"
+          belongs_to $default['relation_name'].to_sym
+          belongs_to :friend, :class_name => $default['class_name'], :foreign_key => "friend_id"
+          belongs_to :blocker, :class_name => $default['class_name'], :foreign_key => "blocker_id"
 
-          validates_presence_of :user_id, :friend_id
-          validates_uniqueness_of :friend_id, :scope => :user_id
+          validates_presence_of $default['class_id'].to_sym, :friend_id
+          validates_uniqueness_of :friend_id, :scope => $default['class_id'].to_sym
         end
       end
 

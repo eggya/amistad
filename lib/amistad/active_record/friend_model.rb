@@ -21,12 +21,12 @@ module Amistad
 
           has_many  :pending_invited_by,
           :through => :inverse_friendships,
-          :source => :user,
+          :source => $default['relation_name'].to_sym,
           :conditions => { :'friendships.pending' => true, :'friendships.blocker_id' => nil }
 
           has_many  :invited_by,
           :through => :inverse_friendships,
-          :source => :user,
+          :source => $default['relation_name'].to_sym,
           :conditions => { :'friendships.pending' => false, :'friendships.blocker_id' => nil }
 
           has_many  :blocked_friendships, :class_name => "Friendship", :foreign_key => "blocker_id"
@@ -38,7 +38,7 @@ module Amistad
 
           has_many  :blockades_by,
           :through => :blocked_friendships,
-          :source => :user,
+          :source => $default['relation_name'].to_sym,
           :conditions => "user_id <> blocker_id"
         end
       end
@@ -47,7 +47,7 @@ module Amistad
         # suggest a user to become a friend. If the operation succeeds, the method returns true, else false
         def invite(user)
           return false if user == self || find_any_friendship_with(user)
-          Friendship.new(:user_id => self.id, :friend_id => user.id).save
+          Friendship.new($default['class_id'].to_sym => self.id, :friend_id => user.id).save
         end
 
         # approve a friendship invitation. If the operation succeeds, the method returns true, else false
@@ -134,9 +134,9 @@ module Amistad
 
         # returns friendship with given user or nil
         def find_any_friendship_with(user)
-          friendship = Friendship.where(:user_id => self.id, :friend_id => user.id).first
+          friendship = Friendship.where($default['class_id'].to_sym => self.id, :friend_id => user.id).first
           if friendship.nil?
-            friendship = Friendship.where(:user_id => user.id, :friend_id => self.id).first
+            friendship = Friendship.where($default['class_id'].to_sym => user.id, :friend_id => self.id).first
           end
           friendship
         end

@@ -1,6 +1,8 @@
 require 'rails/generators'
 require 'rails/generators/migration'
 
+$default = YAML::load( File.open( Rails.root.to_s+"/config/amistad.yml" ) )
+
 module Amistad
   module Generators
     class InstallGenerator < Rails::Generators::Base
